@@ -1,0 +1,9 @@
+resources:
+  - ../../base
+
+patches:
+  - path: config-patch.yaml
+
+images:
+  - name: myregistry/cloud-api-gateway
+    newTag: test-latest

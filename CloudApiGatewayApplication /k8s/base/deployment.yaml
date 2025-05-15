@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloud-api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cloud-api-gateway
+  template:
+    metadata:
+      labels:
+        app: cloud-api-gateway
+    spec:
+      containers:
+        - name: cloud-api-gateway
+          image: cloud-api-gateway:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: default
+            - name: EUREKA_CLIENT_ENABLED
+              value: "false"
+            - name: SPRING_CLOUD_DISCOVERY_ENABLED
+              value: "false"
+            - name: USER_SERVICE_URL
+              value: "http://user-service.default.svc.cluster.local"
+            - name: MASTER_SERVICE_URL
+              value: "http://master-service.default.svc.cluster.local"
+            - name: GATEWAY_CONFIG
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: routes.yaml

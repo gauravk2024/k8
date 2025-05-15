@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+data:
+  routes.yaml: |
+    spring:
+      cloud:
+        gateway:
+          routes:
+            - id: user-service
+              uri: http://user-service
+              predicates:
+                - Path=/api/user/**
+            - id: master-service
+              uri: http://master-service
+              predicates:
+                - Path=/api/master/**
