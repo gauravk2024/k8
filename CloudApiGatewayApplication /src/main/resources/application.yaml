@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8087
 
 spring:
   main:
@@ -26,18 +26,25 @@ spring:
           uri: ${USER_SERVICE_URL:http://user-service}
           predicates:
             - Path=/api/user/**
+          filters:
+            - StripPrefix=1
+            - name: KubernetesToken
         - id: master-service
           uri: ${MASTER_SERVICE_URL:http://master-service}
           predicates:
             - Path=/api/master/**
           filters:
-            - RewritePath=/proxy/(?<url>.*), /?url=${url}
+            - StripPrefix=1
+            - name: KubernetesToken
 
 management:
   endpoints:
     web:
       exposure:
-        include: '*'
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
 
 logging:
   level:

@@ -12,6 +12,7 @@ spec:
       labels:
         app: cloud-api-gateway
     spec:
+      serviceAccountName: cloud-api-gateway-sa
       containers:
         - name: cloud-api-gateway
           image: cloud-api-gateway:latest
@@ -26,11 +27,27 @@ spec:
             - name: SPRING_CLOUD_DISCOVERY_ENABLED
               value: "false"
             - name: USER_SERVICE_URL
-              value: "http://user-service.default.svc.cluster.local"
+              value: "http://user-service.default.svc.cluster.local:8081"
             - name: MASTER_SERVICE_URL
-              value: "http://master-service.default.svc.cluster.local"
+              value: "http://master-service.default.svc.cluster.local:8082"
             - name: GATEWAY_CONFIG
               valueFrom:
                 configMapKeyRef:
                   name: gateway-config
                   key: routes.yaml
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/config
+            - name: token-volume
+              mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              readOnly: true
+      volumes:
+        - name: config-volume
+          configMap:
+            name: gateway-config
+        - name: token-volume
+          projected:
+            sources:
+            - serviceAccountToken:
+                expirationSeconds: 3600
+                path: token

@@ -12,6 +12,7 @@ spec:
       labels:
         app: master-service
     spec:
+      serviceAccountName: master-service-sa
       containers:
         - name: master-service
           image: master-service:latest
@@ -30,4 +31,19 @@ spec:
             - name: SPRING_DATASOURCE_URL
               value: "jdbc:h2:mem:testdb"
             - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
-              value: "org.h2.Driver" 
+              value: "org.h2.Driver"
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI
+              value: "https://kubernetes.default.svc.cluster.local"
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+              value: "https://kubernetes.default.svc.cluster.local/openid/v1/jwks"
+          volumeMounts:
+            - name: kubernetes-token
+              mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+              readOnly: true
+      volumes:
+        - name: kubernetes-token
+          projected:
+            sources:
+            - serviceAccountToken:
+                path: token
+                expirationSeconds: 3600 

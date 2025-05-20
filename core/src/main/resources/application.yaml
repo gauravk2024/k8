@@ -1,0 +1,11 @@
+kubernetes:
+  auth:
+    public-key-path: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+    token-audience: your-spring-app
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://kubernetes.default.svc.cluster.local 

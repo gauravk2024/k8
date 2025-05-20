@@ -9,10 +9,14 @@ data:
         gateway:
           routes:
             - id: user-service
-              uri: http://user-service
+              uri: ${USER_SERVICE_URL:http://user-service.default.svc.cluster.local:8081}
               predicates:
                 - Path=/api/user/**
+              filters:
+                - name: KubernetesToken
             - id: master-service
-              uri: http://master-service
+              uri: ${MASTER_SERVICE_URL:http://master-service.default.svc.cluster.local:8082}
               predicates:
                 - Path=/api/master/**
+              filters:
+                - name: KubernetesToken
