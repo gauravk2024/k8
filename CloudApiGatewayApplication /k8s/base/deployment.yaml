@@ -27,9 +27,9 @@ spec:
             - name: SPRING_CLOUD_DISCOVERY_ENABLED
               value: "false"
             - name: USER_SERVICE_URL
-              value: "http://user-service.default.svc.cluster.local:8081"
+              value: "http://user-service.default.svc.cluster.local"
             - name: MASTER_SERVICE_URL
-              value: "http://master-service.default.svc.cluster.local:8082"
+              value: "http://master-service.default.svc.cluster.local"
             - name: GATEWAY_CONFIG
               valueFrom:
                 configMapKeyRef:
