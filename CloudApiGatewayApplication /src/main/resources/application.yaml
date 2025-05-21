@@ -27,14 +27,12 @@ spring:
           predicates:
             - Path=/api/user/**
           filters:
-            - StripPrefix=1
             - name: KubernetesToken
         - id: master-service
           uri: ${MASTER_SERVICE_URL:http://master-service}
           predicates:
             - Path=/api/master/**
           filters:
-            - StripPrefix=1
             - name: KubernetesToken
 
 management:
